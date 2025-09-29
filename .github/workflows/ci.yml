@@ -33,8 +33,10 @@ jobs:
           version: ${{ env.ZIG_VERSION }}
           cache-key: ${{ matrix.os }}-${{ env.ZIG_VERSION }}
 
+      # Zig fmt is failing on windows and is redundant to run all platforms. So we run only on linux.
       - name: Check formatting
         run: zig fmt --check .
+        if: ${{ matrix.os }} == 'ubuntu-latest'
 
       - name: zig build (Debug)
         run: zig build
