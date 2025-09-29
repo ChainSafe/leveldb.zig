@@ -7,7 +7,7 @@ on:
     branches: [ "**" ]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-lint
   cancel-in-progress: true
 
 env:
