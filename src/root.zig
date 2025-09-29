@@ -615,7 +615,7 @@ pub fn repairDB(options: *Options, name: [:0]const u8) Error!void {
 /// Frees memory allocated by LevelDB.
 /// Use this to free slices returned by functions like `DB.get()` and `DB.propertyName()`.
 pub fn free(ptr: [*]const u8) void {
-    leveldb.leveldb_free(@constCast(@ptrCast(ptr)));
+    leveldb.leveldb_free(@ptrCast(@constCast(ptr)));
 }
 
 // Version functions
