@@ -41,4 +41,4 @@ jobs:
 
       # Build (release-safe) just to catch O2/LTO issues
       - name: zig build (Release)
-        run: zig build -Drelease-safe=true
+        run: zig build --release safe
