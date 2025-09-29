@@ -105,7 +105,7 @@ pub fn build(b: *std.Build) void {
     const port_config_h = b.addConfigHeader(.{
         .style = .{ .cmake = upstream.path("port/port_config.h.in") },
     }, .{
-        .HAVE_FDATASYNC = target.result.os.tag != .windows,
+        .HAVE_FDATASYNC = target.result.os.tag != .windows and target.result.os.tag != .macos,
         .HAVE_FULLFSYNC = target.result.os.tag == .macos,
         .HAVE_0_CLOEXEC = target.result.os.tag != .windows,
         .HAVE_CRC32C = false,
@@ -136,8 +136,10 @@ pub fn build(b: *std.Build) void {
     } else {
         if (target.result.os.tag == .macos) {
             lib.root_module.addCMacro("HAVE_FULLFSYNC", "1");
+        } else {
+            lib.root_module.addCMacro("HAVE_FDATASYNC", "1"); // Linux/BSDs
         }
-        lib.root_module.addCMacro("HAVE_FDATASYNC", "1");
+
         lib.root_module.addCMacro("HAVE_0_CLOEXEC", "1");
         lib.root_module.addCMacro("LEVELDB_PLATFORM_POSIX", "1");
         lib.addCSourceFiles(.{
