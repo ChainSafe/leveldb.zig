@@ -38,11 +38,9 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: zig fmt --check .
 
-      - name: zig build (Debug)
-        run: zig build
+      - name: zig build (Release Safe)
+        run: zig build --release=safe
 
       - name: Test
         run: zig build test
 
-      - name: zig build (Release Safe)
-        run: zig build --release=safe
