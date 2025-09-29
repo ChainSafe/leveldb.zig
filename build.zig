@@ -101,6 +101,8 @@ pub fn build(b: *std.Build) void {
     } else {
         if (target.result.os.tag == .macos) {
             lib.root_module.addCMacro("HAVE_FULLFSYNC", "1");
+        } else {
+            lib.root_module.addCMacro("HAVE_FDATASYNC", "1");
         }
 
         lib.root_module.addCMacro("HAVE_0_CLOEXEC", "1");
