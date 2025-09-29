@@ -111,7 +111,6 @@ pub fn build(b: *std.Build) void {
             .root = upstream.path("."),
             .files = &[_][]const u8{
                 "util/env_posix.cc",
-                "util/posix_logger.h",
             },
             .flags = &[_][]const u8{
                 "-std=c++17",
