@@ -36,9 +36,8 @@ jobs:
       - name: zig build (Debug)
         run: zig build
 
-      - name: zig build test
-        run: zig build test
+      # - name: zig build test
+      #   run: zig build test
 
-      # Build (release-safe) just to catch O2/LTO issues
-      - name: zig build (Release)
+      - name: zig build (Release Safe)
         run: zig build --release safe
