@@ -35,8 +35,8 @@ jobs:
 
       # Zig fmt is failing on windows and is redundant to run all platforms. So we run only on linux.
       - name: Check formatting
+        if: matrix.os == 'ubuntu-latest'
         run: zig fmt --check .
-        if: ${{ matrix.os }} == 'ubuntu-latest'
 
       - name: zig build (Debug)
         run: zig build
