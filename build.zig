@@ -81,7 +81,10 @@ pub fn build(b: *std.Build) void {
     lib.addConfigHeader(port_config_h);
 
     lib.root_module.addCMacro("HAVE_SNAPPY", "1");
-    const snappy_dep = b.dependency("snappy", .{});
+    const snappy_dep = b.dependency("snappy", .{
+        .target = target,
+        .optimize = optimize,
+    });
     lib.linkLibrary(snappy_dep.artifact("snappy"));
 
     if (target.result.os.tag == .windows) {
