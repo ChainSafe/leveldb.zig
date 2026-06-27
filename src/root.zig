@@ -636,7 +636,11 @@ test {
 /// Helper function to create a temporary database path for tests.
 /// Caller is responsible for freeing the returned path.
 fn tmpDbPath(allocator: std.mem.Allocator, tmp_dir: std.testing.TmpDir) ![:0]const u8 {
-    const tmp_dir_path = try tmp_dir.parent_dir.realpathAlloc(allocator, &tmp_dir.sub_path);
+    const tmp_dir_path = try tmp_dir.parent_dir.realPathFileAlloc(
+        std.testing.io,
+        &tmp_dir.sub_path,
+        allocator,
+    );
     defer allocator.free(tmp_dir_path);
 
     return try std.fs.path.joinZ(allocator, &[_][]const u8{ tmp_dir_path, "test.db" });

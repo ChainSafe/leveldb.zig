@@ -2,15 +2,15 @@
     .name = .leveldb,
     .version = "0.1.0",
     .fingerprint = 0x10c9e9cbf0218e9d,
-    .minimum_zig_version = "0.14.1",
+    .minimum_zig_version = "0.16.0",
     .dependencies = .{
         .leveldb = .{
             .url = "git+https://github.com/google/leveldb#ac691084fdc5546421a55b25e7653d450e5a25fb",
             .hash = "N-V-__8AAFYkDwAaCkrqWx3fY7zEKG2rp55dCDmkZYyv5zqn",
         },
         .snappy = .{
-            .url = "git+https://github.com/chainsafe/snappy.zig#ede2ad602ac9ffa506e3724a2bf5fc14c806187f",
-            .hash = "snappy-0.1.0-n4AaqtMYAACgB1kHWQ2_CFI-gbtYEUCbXyYlQZ2ENyfd",
+            .url = "git+https://github.com/chainsafe/snappy.zig#713942410426051da6107a955b29f3f152815622",
+            .hash = "snappy-0.1.0-n4AaquQ4AADQScvw9-i6SJvZTTagvxmGgGKnat4T_a4e",
         },
     },
     .paths = .{

@@ -18,7 +18,7 @@ pub fn build(b: *std.Build) void {
     });
 
     // Rough transliteration of the CMakeLists.txt from the original LevelDB repo
-    lib.addCSourceFiles(.{
+    lib.root_module.addCSourceFiles(.{
         .root = upstream.path("."),
         .files = &[_][]const u8{
             "db/builder.cc",
@@ -66,8 +66,8 @@ pub fn build(b: *std.Build) void {
         },
         .language = .cpp,
     });
-    lib.addIncludePath(upstream.path("."));
-    lib.addIncludePath(upstream.path("include"));
+    lib.root_module.addIncludePath(upstream.path("."));
+    lib.root_module.addIncludePath(upstream.path("include"));
     const port_config_h = b.addConfigHeader(.{
         .style = .{ .cmake = upstream.path("port/port_config.h.in") },
     }, .{
@@ -78,18 +78,18 @@ pub fn build(b: *std.Build) void {
         .HAVE_SNAPPY = true,
         .HAVE_ZSTD = false,
     });
-    lib.addConfigHeader(port_config_h);
+    lib.root_module.addConfigHeader(port_config_h);
 
     lib.root_module.addCMacro("HAVE_SNAPPY", "1");
     const snappy_dep = b.dependency("snappy", .{
         .target = target,
         .optimize = optimize,
     });
-    lib.linkLibrary(snappy_dep.artifact("snappy"));
+    lib.root_module.linkLibrary(snappy_dep.artifact("snappy"));
 
     if (target.result.os.tag == .windows) {
         lib.root_module.addCMacro("LEVELDB_PLATFORM_WINDOWS", "1");
-        lib.addCSourceFiles(.{
+        lib.root_module.addCSourceFiles(.{
             .root = upstream.path("."),
             .files = &[_][]const u8{
                 "util/env_windows.cc",
@@ -110,7 +110,7 @@ pub fn build(b: *std.Build) void {
 
         lib.root_module.addCMacro("HAVE_0_CLOEXEC", "1");
         lib.root_module.addCMacro("LEVELDB_PLATFORM_POSIX", "1");
-        lib.addCSourceFiles(.{
+        lib.root_module.addCSourceFiles(.{
             .root = upstream.path("."),
             .files = &[_][]const u8{
                 "util/env_posix.cc",
