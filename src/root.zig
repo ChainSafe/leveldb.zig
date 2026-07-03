@@ -123,8 +123,12 @@ pub const DB = struct {
             &vallen,
             @ptrCast(&errptr),
         );
-        if (val == null) return null;
+        // The C API returns NULL and sets errptr on read errors (Corruption/IOError),
+        // but returns NULL with errptr unset on a genuine not-found. Surface the error
+        // first (its defer frees the C string) so read failures are not masked as a
+        // missing key and the error string is not leaked; only then treat NULL as absent.
         try handleError(errptr);
+        if (val == null) return null;
         return val[0..vallen];
     }
 
@@ -715,6 +719,33 @@ test "non-existent key" {
     defer read_options.destroy();
     const retrieved = db.get(&read_options, "nonexistent");
     try std.testing.expectEqual(null, retrieved);
+}
+
+test "get not-found returns null after handleError reorder" {
+    var tmp_dir = std.testing.tmpDir(.{});
+    defer tmp_dir.cleanup();
+
+    const db_path = try tmpDbPath(std.testing.allocator, tmp_dir);
+    defer std.testing.allocator.free(db_path);
+
+    var options = Options.create();
+    options.setCreateIfMissing(true);
+    defer options.destroy();
+    var db = try DB.open(&options, db_path);
+    defer db.close();
+
+    var write_options = WriteOptions.create();
+    defer write_options.destroy();
+    try db.put(&write_options, "present", "value");
+
+    var read_options = ReadOptions.create();
+    defer read_options.destroy();
+    // A populated DB returning NotFound leaves errptr unset, so the reordered
+    // handleError-before-null-check still yields null (not an error) for absent keys.
+    try std.testing.expectEqual(null, db.get(&read_options, "absent"));
+    const present = (try db.get(&read_options, "present")).?;
+    defer free(present.ptr);
+    try std.testing.expectEqualStrings("value", present);
 }
 
 test "invalid argument error - missing createIfMissing" {
